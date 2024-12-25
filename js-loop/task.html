@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<label>Add a new Value to menu </label>
+<input type="text" name="newValue" id="newValue">
+<input type="submit" value="Add" onclick="addMEnu()">
+<div id="menu" style="border: 1px solid saddlebrown"></div>
+<script type="text/javascript">
+  let arrMenu = ['Menu1', 'Menu2', 'Menu3'];
+
+  function getMenu() {
+    let ulMenu = '<ul>'
+    for (let value of arrMenu) {
+      ulMenu += `<li>${value}</li>`;
+    }
+    ulMenu += '</ul>';
+    return ulMenu;
+  }
+
+  function showMenu() {
+    let menu = getMenu();
+    document.getElementById('menu').innerHTML = menu;
+  }
+
+  showMenu();
+
+  function addMEnu() {
+    arrMenu.push(document.getElementById('newValue').value);
+    getMenu();
+    showMenu();
+  }
+
+  let menu = getMenu();
+  let divMenu = document.getElementById('menu');
+  divMenu.innerHTML = menu;
+</script>
+</body>
+</html>
