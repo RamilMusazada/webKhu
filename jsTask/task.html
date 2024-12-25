@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reorderable Menu</title>
+  <style>
+    .menu { display: flex; gap: 10px; margin: 20px; }
+    .menu-item { display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #ccc; background-color: #f9f9f9; text-align: center; }
+    button { font-size: 18px; background: none; border: none; cursor: pointer; }
+    button.disabled { visibility: hidden; }
+  </style>
+</head>
+<body>
+<div class="menu" id="menu">
+  <div class="menu-item"><span>Item 1</span><button class="move-left">←</button><button class="move-right">→</button></div>
+  <div class="menu-item"><span>Item 2</span><button class="move-left">←</button><button class="move-right">→</button></div>
+  <div class="menu-item"><span>Item 3</span><button class="move-left">←</button><button class="move-right">→</button></div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menu = document.getElementById("menu");
+
+    menu.addEventListener("click", (event) => {
+      const item = event.target.closest(".menu-item");
+      if (!item) return;
+      const items = Array.from(menu.children);
+      const index = items.indexOf(item);
+
+      if (event.target.classList.contains("move-left") && index > 0) {
+        moveLeft(items, index);
+      }
+      if (event.target.classList.contains("move-right") && index < items.length - 1) {
+        moveRight(items, index);
+      }
+    });
+
+    function moveLeft(items, index) {
+      // Splice ilə elementin mövqeyini dəyişirik
+      const item = items.splice(index, 1)[0]; // Silirik
+      items.splice(index - 1, 0, item); // Yeni mövqeyə əlavə edirik
+      updateMenu(items);
+    }
+
+    function moveRight(items, index) {
+      // Splice ilə elementin mövqeyini dəyişirik
+      const item = items.splice(index, 1)[0]; // Silirik
+      items.splice(index + 1, 0, item); // Yeni mövqeyə əlavə edirik
+      updateMenu(items);
+    }
+
+    function updateMenu(items) {
+      menu.innerHTML = ''; // Menuyu təmizləyirik
+      items.forEach(item => menu.appendChild(item)); // Yeni sıralanan elementləri yenidən əlavə edirik
+      updateButtons(items); // Düymələri yeniləyirik
+    }
+
+    function updateButtons(items) {
+      items.forEach((item, index) => {
+        const moveLeftButton = item.querySelector(".move-left");
+        const moveRightButton = item.querySelector(".move-right");
+        moveLeftButton.classList.toggle("disabled", index === 0);
+        moveRightButton.classList.toggle("disabled", index === items.length - 1);
+      });
+    }
+
+    updateButtons(Array.from(menu.children)); // Başlangıcda düymələri yeniləyirik
+  });
+</script>
+</body>
+</html>
