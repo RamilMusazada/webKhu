@@ -2,23 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Javascript Menu Task</title>
+  <style>
+    #menu ul li {
+      display: inline-block;
+      width: 150px;
+      padding: 5px 10px;
+      background-color: #0dcaf0;
+      color: #1a1d20;
+      text-align: center;
+      margin: 5px;
+    }
+
+    #arrow {
+      margin-left: 40px;
+      display: none;
+    }
+
+    #arrow div {
+      float: left;
+      width: 150px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-<label>Add a new Value to menu </label>
-<input type="text" name="newValue" id="newValue">
-<input type="submit" value="Add" onclick="addMEnu()">
-<div id="menu" style="border: 1px solid saddlebrown"></div>
+<div class="box">
+  <p>
+    <a href="#" onclick="activateEditMode()">Activate Edit Mode</a>
+  </p>
+  <p>
+    <label>Add New Menu</label>
+    <input type="text" id="newMenuValue">
+    <input type="submit" value="Add" onclick="addMenu()">
+  </p>
+</div>
+<div id="menu"></div>
+
 <script type="text/javascript">
-  let arrMenu = ['Menu1', 'Menu2', 'Menu3'];
+  let arrMenu = ['Menu 1', 'Menu 2', 'Menu 3'];
 
   function getMenu() {
-    let ulMenu = '<ul>'
-    for (let value of arrMenu) {
-      ulMenu += `<li>${value}</li>`;
+    let menuHtml = '<ul>';
+    let arrowHtml = '<div id="arrow">';
+    for (let i = 0; i < arrMenu.length; i++) {
+      menuHtml += '<li>' + arrMenu[i] + '</li>';
+      if (i === 0) {
+        arrowHtml += '<div><a href="#" onclick="moveRight(' + i + ')">-></a></div>';
+      } else if (i === arrMenu.length - 1) {
+        arrowHtml += '<div><a href="#" onclick="moveLeft(' + i + ')"><-</a></div>';
+      } else {
+        arrowHtml += '<div><a href="#" onclick="moveLeft(' + i + ')"><-</a> | <a href="#" onclick="moveRight(' + i + ')">-></a></div>';
+      }
     }
-    ulMenu += '</ul>';
-    return ulMenu;
+    menuHtml += '</ul>';
+    arrowHtml += '</div>';
+    return menuHtml + arrowHtml;
   }
 
   function showMenu() {
@@ -26,17 +66,33 @@
     document.getElementById('menu').innerHTML = menu;
   }
 
-  showMenu();
+  function addMenu() {
+    let newMenu = document.getElementById('newMenuValue');
+    if (newMenu.value === '') return;
+    arrMenu.push(newMenu.value);
+    showMenu();
+    newMenu.value = '';
+  }
 
-  function addMEnu() {
-    arrMenu.push(document.getElementById('newValue').value);
-    getMenu();
+  function moveLeft(indexElement) {
+    let currentMenu = arrMenu[indexElement];
+    let replacedMenu = arrMenu[indexElement - 1];
+    arrMenu.splice(indexElement - 1, 2, currentMenu, replacedMenu);
     showMenu();
   }
 
-  let menu = getMenu();
-  let divMenu = document.getElementById('menu');
-  divMenu.innerHTML = menu;
+  function moveRight(indexElement) {
+    let currentMenu = arrMenu[indexElement];
+    let replacedMenu = arrMenu[indexElement + 1];
+    arrMenu.splice(indexElement, 2, replacedMenu, currentMenu);
+    showMenu();
+  }
+
+  function activateEditMode() {
+    document.getElementById('arrow').style.display = 'block';
+  }
+
+  showMenu();
 </script>
 </body>
 </html>
